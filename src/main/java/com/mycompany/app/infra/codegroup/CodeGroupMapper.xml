@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycompany.app.infra.codegroup.CodeGroupMapper">
+
+    <resultMap id="resultMapObj" type="com.mycompany.app.infra.codegroup.CodeGroup"></resultMap>
+        <sql id="abc">
+    seq,
+    name,
+    delYN
+    </sql>
+   <!--  <select id="selectList" resultMap="resultMapObj">
+    	SELECT *
+    	FROM
+    		<include refid="abc"/>
+    	WHERE 1=1
+    	<if test="shKeyword !-null and !shKeyword.equals('')">AND name LIKE CONCAT('%',#{shKeyword},'%')</if>
+    		
+    
+    </select> -->
+     <sql id ="selectCommon">
+   		FROM    
+	    	codeGroup
+		WHERE 1=1
+			<if test="shKeyword != null and !shKeyword.equals('')">AND Name LIKE CONCAT('%',#{shKeyword},'%')</if>
+    </sql>
+
+   	<select id="selectOneCount" resultType="Integer">
+		SELECT count(*)
+		<include refid="selectCommon" />
+	</select>
+
+   	<select id="selectList" resultMap="resultMapObj">
+		SELECT aa.* FROM (   	
+	   		SELECT
+				<include refid="abc" />
+	   			<include refid="selectCommon" />
+		) aa
+		LIMIT #{rowNumToShow} OFFSET #{startRnumForMysql}	   			
+   	</select>
+   	
+    <!-- <select id="selectList" resultMap="resultMapObj">
+    	SELECT *
+    	FROM
+    		codeGroup
+    	WHERE 1=1
+    	AND
+    	 name LIKE CONCAT('%',#{shKeyword},'%')
+    		
+    
+    </select> -->
+    
+	<select id="selectOne" resultMap="resultMapObj">
+		SELECT *
+		FROM 
+			codeGroup
+		WHERE 1=1
+		AND
+			seq = #{seq}
+	</select>
+	
+	<update id="update">
+        UPDATE     codeGroup
+        SET     name = #{name},
+				delYN=#{delYN}        	
+        WHERE  1=1
+        AND
+           seq = #{seq}  
+    </update>
+    
+    <delete id="delete">
+    	DELETE 
+    	FROM codeGroup
+    	WHERE 1=1
+    	AND 
+    	seq = #{seq} 
+    </delete>
+    
+    <insert id="insert"> 
+    INSERT
+    INTO codeGroup
+    (name,
+    delYN)
+    VALUE (#{name},#{delYN})
+    </insert>
+    
+    <update id="uelete">
+        UPDATE 
+        	codeGroup
+        SET 
+        	delYN = #{delYN}
+        WHERE 1=1
+        AND
+        	seq = #{seq}
+    </update>
+    
+   
+    
+   
+
+
+
+	
+</mapper>   
+
